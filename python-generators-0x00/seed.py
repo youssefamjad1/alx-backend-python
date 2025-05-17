@@ -5,7 +5,7 @@ import uuid
 
 DB_HOST = "localhost"
 DB_USER = "root"
-DB_PASSWORD = "your_password_here"  # Replace with your MySQL root password
+DB_PASSWORD = "20252025"  # Replace with your MySQL root password
 
 
 def connect_db():
