@@ -2,7 +2,7 @@
 import mysql.connector
 from decimal import Decimal
 
-def stream_users_in_batches(batch_size):
+def streamusersinbatches(batchsize):
     """Generator that yields batches of users from the database"""
     connection = mysql.connector.connect(
         host='localhost',
@@ -16,7 +16,7 @@ def stream_users_in_batches(batch_size):
     while True:
         cursor.execute(
             "SELECT * FROM user_data LIMIT %s OFFSET %s",
-            (batch_size, offset)
+            (batchsize, offset)
         )
         rows = cursor.fetchall()
         if not rows:
@@ -26,15 +26,15 @@ def stream_users_in_batches(batch_size):
             if isinstance(row['age'], Decimal):
                 row['age'] = int(row['age'])
         yield rows
-        offset += batch_size
+        offset += batchsize
 
     cursor.close()
     connection.close()
 
 
-def batch_processing(batch_size):
+def batch_processing(batchsize):
     """Processes batches and yields users older than 25"""
-    for batch in stream_users_in_batches(batch_size):
+    for batch in streamusersinbatches(batchsize):
         for user in batch:
             if user['age'] > 25:
                 yield user
