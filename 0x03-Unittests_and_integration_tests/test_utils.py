@@ -70,11 +70,13 @@ class TestMemoize(unittest.TestCase):
             mock_method.return_value = 42
             obj = TestClass()
 
-            self.assertEqual(obj.a_property(), 42)
-            self.assertEqual(obj.a_property(), 42)
+            # Access as attribute, not a method call
+            self.assertEqual(obj.a_property, 42)
+            self.assertEqual(obj.a_property, 42)
 
             mock_method.assert_called_once()
 
 
 if __name__ == "__main__":
-    unittest.main()
+    unittest.main(verbosity=0)  # verbosity=0 is quiet mode
+
