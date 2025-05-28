@@ -9,8 +9,6 @@ from parameterized import parameterized, parameterized_class
 from client import GithubOrgClient
 from fixtures import TEST_PAYLOAD
 
-org_payload, repos_payload, expected_repos, apache2_repos = TEST_PAYLOAD[0]
-
 
 class TestGithubOrgClient(unittest.TestCase):
     """Unit tests for GithubOrgClient"""
@@ -76,17 +74,25 @@ class TestGithubOrgClient(unittest.TestCase):
         )
 
 
-@parameterized_class([{
-    "org_payload": org_payload,
-    "repos_payload": repos_payload,
-    "expected_repos": expected_repos,
-    "apache2_repos": apache2_repos,
-}])
+class MockResponse:
+    """Mock response class for requests.get"""
+    def __init__(self, json_data):
+        self._json_data = json_data
+
+    def json(self):
+        return self._json_data
+
+
+@parameterized_class(
+    ("org_payload", "repos_payload", "expected_repos", "apache2_repos"),
+    TEST_PAYLOAD
+)
 class TestIntegrationGithubOrgClient(unittest.TestCase):
     """Integration tests for GithubOrgClient.public_repos using fixtures"""
 
     @classmethod
     def setUpClass(cls):
+        """Set up class method to start patcher"""
         cls.get_patcher = patch("requests.get")
         cls.mock_get = cls.get_patcher.start()
 
@@ -101,20 +107,20 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
+        """Tear down class method to stop patcher"""
         cls.get_patcher.stop()
 
     def test_public_repos(self):
+        """Test public_repos method in integration test"""
         client = GithubOrgClient("google")
         repos = client.public_repos()
         self.assertEqual(repos, self.expected_repos)
 
-
-class MockResponse:
-    def __init__(self, json_data):
-        self._json_data = json_data
-
-    def json(self):
-        return self._json_data
+    def test_public_repos_with_license(self):
+        """Test public_repos method with license filtering"""
+        client = GithubOrgClient("google")
+        repos = client.public_repos(license="apache-2.0")
+        self.assertEqual(repos, self.apache2_repos)
 
 
 if __name__ == "__main__":
