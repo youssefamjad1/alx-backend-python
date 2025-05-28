@@ -87,7 +87,6 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        """Start patching requests.get and set side effects"""
         cls.get_patcher = patch("requests.get")
         cls.mock_get = cls.get_patcher.start()
 
@@ -102,25 +101,19 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
-        """Stop patching requests.get"""
         cls.get_patcher.stop()
 
     def test_public_repos(self):
-        """Test public_repos returns expected list of repo names"""
         client = GithubOrgClient("google")
         repos = client.public_repos()
         self.assertEqual(repos, self.expected_repos)
 
 
 class MockResponse:
-    """Mock response for requests.get().json()"""
-
     def __init__(self, json_data):
-        """Initialize mock with JSON data"""
         self._json_data = json_data
 
     def json(self):
-        """Return the mocked JSON data"""
         return self._json_data
 
 
