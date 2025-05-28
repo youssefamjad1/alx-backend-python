@@ -7,7 +7,10 @@ import unittest
 from unittest.mock import patch, Mock
 from parameterized import parameterized, parameterized_class
 from client import GithubOrgClient
-from fixtures import org_payload, repos_payload, expected_repos, apache2_repos
+from fixtures import TEST_PAYLOAD
+
+org_payload, repos_payload, expected_repos, apache2_repos = TEST_PAYLOAD[0]
+
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -22,7 +25,7 @@ class TestGithubOrgClient(unittest.TestCase):
         """Test that GithubOrgClient.org returns the expected result"""
         mock_get_json.return_value = {"mocked": True}
         client = GithubOrgClient(org_name)
-        result = client.org()
+        result = client.org
         mock_get_json.assert_called_once_with(f"https://api.github.com/orgs/{org_name}")
         self.assertEqual(result, {"mocked": True})
 
