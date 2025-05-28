@@ -39,7 +39,10 @@ class TestGithubOrgClient(unittest.TestCase):
             new_callable=unittest.mock.PropertyMock
         ) as mock_org:
             mock_org.return_value = {"repos_url": "http://some.url/repo"}
-            self.assertEqual(client._public_repos_url, "http://some.url/repo")
+            self.assertEqual(
+                client._public_repos_url,
+                "http://some.url/repo"
+            )
 
     @patch("client.get_json")
     def test_public_repos(self, mock_get_json):
@@ -67,20 +70,26 @@ class TestGithubOrgClient(unittest.TestCase):
     def test_has_license(self, repo, license_key, expected):
         """Test GithubOrgClient.has_license with different licenses"""
         client = GithubOrgClient("test_org")
-        self.assertEqual(client.has_license(repo, license_key), expected)
+        self.assertEqual(
+            client.has_license(repo, license_key),
+            expected
+        )
 
 
-@parameterized_class([{
-    "org_payload": org_payload,
-    "repos_payload": repos_payload,
-    "expected_repos": expected_repos,
-    "apache2_repos": apache2_repos,
-}])
+@parameterized_class([
+    {
+        "org_payload": org_payload,
+        "repos_payload": repos_payload,
+        "expected_repos": expected_repos,
+        "apache2_repos": apache2_repos,
+    }
+])
 class TestIntegrationGithubOrgClient(unittest.TestCase):
     """Integration tests for GithubOrgClient.public_repos using fixtures"""
 
     @classmethod
     def setUpClass(cls):
+        """Start patching requests.get and set up side effects"""
         cls.get_patcher = patch("requests.get")
         cls.mock_get = cls.get_patcher.start()
 
@@ -95,6 +104,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
+        """Stop patching requests.get"""
         cls.get_patcher.stop()
 
     def test_public_repos(self):
@@ -108,6 +118,7 @@ class MockResponse:
     """Mock response for requests.get().json()"""
 
     def __init__(self, json_data):
+        """Initialize mock with JSON data"""
         self._json_data = json_data
 
     def json(self):
