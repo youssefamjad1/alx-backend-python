@@ -1,0 +1,11 @@
+{
+  "python.pythonPath": "..\\venv\\Scripts\\python.exe",
+  "python.analysis.extraPaths": [
+    "./messaging_app",
+    "./chats"
+  ],
+  "python.analysis.useLibraryCodeForTypes": true,
+  "python.linting.enabled": true,
+  "python.linting.pylintEnabled": true,
+  "python.formatting.provider": "black"
+}
