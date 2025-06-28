@@ -1,0 +1,10 @@
+#!/bin/bash
+
+echo "Deploying blue and green versions..."
+kubectl apply -f blue_deployment.yaml
+kubectl apply -f green_deployment.yaml
+kubectl apply -f kubeservice.yaml
+
+echo "Checking logs for green deployment..."
+POD=$(kubectl get pods -l app=django-messaging-app-green -o jsonpath='{.items[0].metadata.name}')
+kubectl logs $POD

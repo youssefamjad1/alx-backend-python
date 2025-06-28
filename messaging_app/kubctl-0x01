@@ -1,0 +1,13 @@
+#!/bin/bash
+
+echo "Scaling deployment to 3 replicas..."
+kubectl scale deployment django-messaging-app --replicas=3
+
+echo "Listing pods..."
+kubectl get pods
+
+echo "Monitoring resource usage..."
+kubectl top pods
+
+echo "Optional: Run load test if 'wrk' is installed (adjust URL accordingly)"
+echo "Example: wrk -t4 -c100 -d30s http://$(minikube ip):8000"

@@ -1,0 +1,20 @@
+#!/bin/bash
+MINIKUBE_BIN="C:/ProgramData/chocolatey/bin/minikube.exe"
+
+# Check if minikube is installed
+if ! command -v minikube &> /dev/null; then
+  echo "minikube not found. Please install minikube first."
+  exit 1
+fi
+
+# Start minikube cluster
+echo "Starting minikube cluster..."
+minikube start
+
+# Verify cluster is running
+echo "Verifying Kubernetes cluster info..."
+kubectl cluster-info
+
+# Retrieve available pods (in all namespaces)
+echo "Listing all pods:"
+kubectl get pods --all-namespaces
